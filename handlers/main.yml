@@ -1,0 +1,4 @@
+---
+# handlers file for docker-proxy-host
+- name: compose
+  command: /home/proxy/containers/update-containers.sh

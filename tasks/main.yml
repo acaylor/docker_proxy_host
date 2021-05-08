@@ -1,0 +1,71 @@
+---
+# tasks file for docker-proxy-host
+- name: configure firewall
+  include_role:
+    name: geerlingguy.firewall
+- name: configure docker
+  include_role:
+    name: geerlingguy.docker
+- name: check for python docker sdk
+  include_role:
+    name: geerlingguy.pip
+- name: add proxy user
+  user:
+    name: proxy
+    groups: docker
+    append: yes
+    shell: /bin/bash
+- name: create docker network proxied
+  community.docker.docker_network:
+    name: proxied
+- name: create directory for compose files
+  file:
+    path: /home/proxy/containers
+    state: directory
+    owner: proxy
+    group: docker
+    mode: '751'
+- name: create directory for proxy-manager
+  file:
+    path: /home/proxy/containers/proxy-manager
+    state: directory
+    mode: '751'
+    owner: proxy
+    group: docker
+- name: create directory for portainer
+  file:
+    path: /home/proxy/containers/portainer
+    state: directory
+    mode: '751'
+    owner: proxy
+    group: docker
+- name: copy proxy manager compose template
+  template:
+    src: proxy-manager.j2
+    dest: /home/proxy/containers/proxy-manager/docker-compose.yml
+    owner: proxy
+    group: docker
+    mode: '640'
+- name: copy portainer compose template
+  template:
+    src: portainer.j2
+    dest: /home/proxy/containers/portainer/docker-compose.yml
+    owner: proxy
+    group: docker
+    mode: '640'
+- name: script to update containers
+  template:
+    src: update-containers.j2
+    dest: /home/proxy/containers/update-containers.sh
+    owner: proxy
+    group: docker
+    mode: '751'
+- name: create cron job to update the containers
+  cron:
+    name: update containers
+    minute: "0"
+    hour: "4"
+    job: /home/proxy/containers/update-containers.sh
+    cron_file: ansible_container_update
+    user: proxy
+  notify: compose

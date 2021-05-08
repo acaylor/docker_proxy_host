@@ -1,0 +1,16 @@
+version: '3'
+networks:
+  default:
+    external:
+      name: proxied
+services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    command: -H unix:///var/run/docker.sock
+    restart: always
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - portainer_data:/data
+volumes:
+  portainer_data: {}

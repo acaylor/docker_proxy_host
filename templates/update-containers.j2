@@ -1,0 +1,8 @@
+#!/bin/bash
+set -e
+cd /home/proxy/containers/proxy-manager
+docker-compose pull
+docker-compose up -d
+cd /home/proxy/containers/portainer
+docker-compose pull
+docker-compose up -d

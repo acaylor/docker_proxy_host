@@ -1,0 +1,12 @@
+---
+# defaults file for docker-proxy-host
+firewall_allowed_tcp_ports:
+  - "22"
+  - "80"
+  - "81"
+  - "443"
+firewall_allowed_udp_ports: []
+pip_install_packages:
+  - name: docker
+mysql_pw: ""
+mysql_root_pw: ""
