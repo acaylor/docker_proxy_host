@@ -65,7 +65,7 @@
     name: update containers
     minute: "0"
     hour: "4"
-    job: /home/proxy/containers/update-containers.sh
+    job: /home/proxy/containers/update-containers.sh >> /home/proxy/cron.log 2>&1
     cron_file: ansible_container_update
     user: proxy
   notify: compose
